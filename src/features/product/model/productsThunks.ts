@@ -3,6 +3,7 @@ import {productsApi} from "./productsApi.ts";
 import type {NewProduct, Product} from "./types.ts";
 
 export const fetchProducts = createAsyncThunk<Product[]>('product/fetchAll', productsApi.getProducts)
+export const fetchProductById = createAsyncThunk<Product, number>('product/fetchById', productsApi.getProduct)
 export const fetchCategories = createAsyncThunk<string[]>('product/fetchCategories', productsApi.getCategories)
 export const addProduct = createAsyncThunk<Product, NewProduct>('product/add', productsApi.addProduct)
 export const updateProduct = createAsyncThunk<Product, Partial<Product> & Pick<Product, 'id'>>(
