@@ -36,6 +36,9 @@ const productSlice = createSlice({
     reducers: {
         setSort(state, action: PayloadAction<{ by: SortBy; order: SortOrder }>) {
             state.sort = action.payload
+        },
+        hydrate(state, action: PayloadAction<Product[]>) {
+            adapter.setAll(state, action.payload)
         }
     },
     extraReducers: (builder) => {
@@ -79,7 +82,7 @@ const productSlice = createSlice({
     }
 })
 
-export const {setSort} = productSlice.actions
+export const {setSort, hydrate} = productSlice.actions
 export default productSlice.reducer
 
 const selectors = adapter.getSelectors<RootState>((s) => s.product)
