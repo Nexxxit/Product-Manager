@@ -1,0 +1,25 @@
+.products-list {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(3, 1fr);
+    place-items: center;
+}
+
+@media (max-width: 768px) {
+    .products-list { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+    .products-list { grid-template-columns: 1fr; }
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.loading__text {
+    font-weight: 500;
+    font-size: 16px;
+}
