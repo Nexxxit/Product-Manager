@@ -18,7 +18,7 @@ type SortOrder = 'asc' | 'desc';
 type ExtraState = {
     status: Status;
     error: string | null;
-    sort: { by: SortBy; order: SortOrder };
+    sort: { by: SortBy; order: SortOrder } | null;
     categories: string[];
 }
 
@@ -26,7 +26,7 @@ const initial: ReturnType<typeof adapter.getInitialState> & ExtraState =
     adapter.getInitialState({
         status: 'idle',
         error: null,
-        sort: {by: "price", order: 'asc'},
+        sort: null,
         categories: [],
     })
 
@@ -36,6 +36,9 @@ const productSlice = createSlice({
     reducers: {
         setSort(state, action: PayloadAction<{ by: SortBy; order: SortOrder }>) {
             state.sort = action.payload
+        },
+        resetSort(state) {
+            state.sort = null
         },
         hydrate(state, action: PayloadAction<Product[]>) {
             adapter.setAll(state, action.payload)
@@ -82,7 +85,7 @@ const productSlice = createSlice({
     }
 })
 
-export const {setSort, hydrate} = productSlice.actions
+export const {setSort, resetSort, hydrate} = productSlice.actions
 export default productSlice.reducer
 
 const selectors = adapter.getSelectors<RootState>((s) => s.product)
@@ -93,6 +96,7 @@ export const selectCategories = (s: RootState) => s.product.categories
 export const selectSort = (s: RootState) => s.product.sort
 
 export const selectSortedProducts = createSelector([selectAllProducts, selectSort], (items, sort) => {
+    if (!sort) return items
     const arr = [...items]
     arr.sort((a, b) => {
         const av = sort.by === 'price' ? a.price : a.rating?.rate ?? 0
