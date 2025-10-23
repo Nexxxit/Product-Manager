@@ -1,5 +1,5 @@
 import {useAppSelector, useAppDispatch} from "../../../../app/store/hooks.ts";
-import {fetchProducts, selectAllProducts, selectStatus} from "../../model";
+import {fetchProducts, selectSortedProducts, selectStatus} from "../../model";
 import {useEffect} from "react";
 import ProductCard from "../productCard/ProductCard.tsx";
 import {hydrate} from "../../model/slice.ts";
@@ -10,15 +10,15 @@ import './productList.css'
 const ProductList = () => {
     const dispatch = useAppDispatch()
     const status = useAppSelector(selectStatus)
-    const products = useAppSelector(selectAllProducts)
+    const products = useAppSelector(selectSortedProducts)
 
     useEffect(() => {
-        dispatch(hydrate(mockProducts))
-    }, [dispatch]);
-
-    // useEffect(() => {
-    //     if (status === 'idle') dispatch(fetchProducts())
-    // }, [status, dispatch]);
+        if(import.meta.env.DEV) {
+            dispatch(hydrate(mockProducts))
+        } else {
+            if(status === 'idle') dispatch(fetchProducts())
+        }
+    }, [dispatch, status]);
 
     if (status === 'loading') return (
         <div className={'loading'}>
