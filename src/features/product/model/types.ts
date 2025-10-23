@@ -10,4 +10,4 @@ export type Product = {
     rating: Rating;
 }
 
-export type NewProduct = Omit<Product, 'id | rating'> & {rating?: Rating}
+export type NewProduct = Omit<Product, 'id' | 'rating'>
