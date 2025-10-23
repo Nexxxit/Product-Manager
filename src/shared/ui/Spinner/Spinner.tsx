@@ -1,8 +1,12 @@
 import './spinner.css'
 
-const Spinner = () => {
+type SpinnerProps = {
+    className?: string;
+}
+
+const Spinner = ({className}: SpinnerProps) => {
     return (
-        <span className={'spinner'} aria-hidden={"true"}></span>
+        <span className={`spinner ${className}`} aria-hidden={"true"}></span>
     )
 }
 
