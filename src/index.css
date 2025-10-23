@@ -1,31 +1,77 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+    font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    --bg: #f8fafc;
+    --bg-soft: #ffffff;
+    --surface: #ffffff;
+
+    --primary: #6366f1;
+    --primary-600: #4f46e5;
+    --primary-400: #818cf8;
+
+    --accent: #f97316;
+    --accent-600: #ea580c;
+
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+
+    --text: #0f172a;
+    --text-muted: #475569;
+    --border: #e5e7eb;
+    --radius: 12px;
+
+    --ring: 0 0 0 3px rgba(99,102,241,.35);
+
+    --card-shadow: 0 8px 24px rgba(2, 6, 23, .08);
+
+    --modal-bg: #fff;
+    --modal-border: #e5e7eb;
+    --modal-section-bg: #fff;
 }
 
-
 * {
-  margin: 0;
-  padding: 0;
-  border: none;
+    margin: 0;
+    padding: 0;
+    border: none;
 }
 
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 a, a:link, a:visited {
-  text-decoration: none;
+    text-decoration: none;
 }
 
 a:hover {
-  text-decoration: none;
+    text-decoration: none;
 }
+
+html, body {
+    background: var(--bg);
+    color: var(--text);
+}
+
+.container {
+    min-height: 100dvh;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
