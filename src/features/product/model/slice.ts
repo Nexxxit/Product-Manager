@@ -20,6 +20,7 @@ type ExtraState = {
     error: string | null;
     sort: { by: SortBy; order: SortOrder } | null;
     categories: string[];
+    creating: boolean;
 }
 
 const initial: ReturnType<typeof adapter.getInitialState> & ExtraState =
@@ -28,6 +29,7 @@ const initial: ReturnType<typeof adapter.getInitialState> & ExtraState =
         error: null,
         sort: null,
         categories: [],
+        creating: false,
     })
 
 const productSlice = createSlice({
@@ -70,8 +72,16 @@ const productSlice = createSlice({
                 s.status = 'failed';
                 s.error = a.error.message || 'Ошибка'
             })
+            .addCase(addProduct.pending, (s) => {
+                s.creating = true
+            })
             .addCase(addProduct.fulfilled, (s, a) => {
+                s.creating = false
                 adapter.addOne(s, a.payload)
+            })
+            .addCase(addProduct.rejected, (s, a) => {
+                s.creating = false
+                s.error = a.error.message || 'Ошибка'
             })
             .addCase(updateProduct.fulfilled, (s, a) => {
                 adapter.upsertOne(s, a.payload)
@@ -94,6 +104,7 @@ export const selectProductById = selectors.selectById
 export const selectStatus = (s: RootState) => s.product.status
 export const selectCategories = (s: RootState) => s.product.categories
 export const selectSort = (s: RootState) => s.product.sort
+export const selectIsAdding = (s: RootState) => s.product.creating
 
 export const selectSortedProducts = createSelector([selectAllProducts, selectSort], (items, sort) => {
     if (!sort) return items
