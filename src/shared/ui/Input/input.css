@@ -1,0 +1,51 @@
+.input,
+textarea.input,
+select.input {
+    width: 100%;
+    height: 40px;
+    padding: 0 12px;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    outline: none;
+    transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
+}
+
+textarea.input {
+    min-height: 96px;
+    padding: 10px 12px;
+    resize: vertical;
+}
+
+.input::placeholder,
+textarea.input::placeholder {
+    color: var(--text-muted);
+}
+
+.input:focus,
+textarea.input:focus,
+select.input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, .15);
+}
+
+.input.is-invalid,
+textarea.input.is-invalid,
+select.input.is-invalid {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, .12);
+}
+
+select.input {
+    appearance: none;
+    padding-right: 36px;
+    background-image:
+            linear-gradient(45deg, transparent 50%, var(--text-muted) 50%),
+            linear-gradient(-45deg, transparent 50%, var(--text-muted) 50%);
+    background-position:
+            right 14px center,
+            right 8px center;
+    background-size: 6px 6px;
+    background-repeat: no-repeat;
+}
