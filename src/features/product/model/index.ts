@@ -2,6 +2,7 @@ export {
     default as productReducer,
     setSort,
     resetSort,
+    selectIsAdding,
     selectSort,
     selectSortedProducts,
     selectCategories,
