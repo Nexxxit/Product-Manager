@@ -74,4 +74,14 @@ export const mockProducts: Product[] = [
         rating: {rate: 4.5, count: 120}
     },
 ]
-export const mockCategories = ['clothes', 'electronics']
+export const mockCategories = [
+    'clothes',
+    'electronics',
+    'jewelery',
+    'home',
+    'sports',
+    'books',
+    'toys',
+    'beauty',
+    'groceries',
+    'automotive',]
