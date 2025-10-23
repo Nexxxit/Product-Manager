@@ -4,7 +4,7 @@ type SpinnerProps = {
     className?: string;
 }
 
-const Spinner = ({className}: SpinnerProps) => {
+const Spinner = ({className = ''}: SpinnerProps) => {
     return (
         <span className={`spinner ${className}`} aria-hidden={"true"}></span>
     )
