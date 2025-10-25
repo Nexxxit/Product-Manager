@@ -3,12 +3,17 @@ import {useAppSelector} from "../../../../app/store/hooks.ts";
 import {selectProductById} from "../../model";
 import './productCard.css'
 
-const ProductCard = ({id}: { id: number }) => {
+type ProductCardProps = {
+    onClick: () => void;
+    id: number;
+}
+
+const ProductCard = ({id, onClick}: ProductCardProps) => {
     const product = useAppSelector(s => selectProductById(s, id))
     if (!product) return null
 
     return (
-        <article className={'card'}>
+        <article className={'card'} onClick={onClick}>
             <div className={'card__image-wrap'}>
                 <img className={'card__image-bg'} src={product.image} alt={""} aria-hidden={"true"} loading={"lazy"} />
                 <img
