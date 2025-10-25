@@ -1,20 +1,25 @@
 import Input from "../../../../shared/ui/Input/Input.tsx";
 import {useAppDispatch, useAppSelector} from "../../../../app/store/hooks.ts";
-import {addProduct, fetchCategories, type NewProduct, selectCategories} from "../../model";
+import {addProduct, fetchCategories, type NewProduct, selectCategories, updateProduct} from "../../model";
 import {useEffect, useState} from "react";
 import './productForm.css'
 
 type FieldsErrors = Partial<Record<'title' | 'price' | 'description' | 'image' | 'category', string>>
-type ProductFormProps = { onSuccess?: () => void }
+type ProductFormProps = {
+    formId: string;
+    onSuccess?: () => void
+    mode?: 'create' | 'edit'
+    initial?: { id: number; title: string; price: number; description?: string; image?: string; category: string }
+}
 
-const ProductForm = ({onSuccess}: ProductFormProps) => {
+const ProductForm = ({onSuccess, formId, mode = 'create', initial}: ProductFormProps) => {
     const [fieldsErrors, setFieldsErrors] = useState<FieldsErrors>({})
     const categories = useAppSelector(selectCategories)
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        dispatch(fetchCategories())
-    }, [dispatch]);
+        if (categories.length === 0) dispatch(fetchCategories())
+    }, [dispatch, categories.length]);
 
     const clearErrors = (name: keyof FieldsErrors) => {
         if (fieldsErrors[name]) setFieldsErrors(prev => ({...prev, [name]: ''}))
@@ -74,8 +79,13 @@ const ProductForm = ({onSuccess}: ProductFormProps) => {
         const formEl = e.currentTarget;
 
         try {
-            await dispatch(addProduct(body)).unwrap();
-            formEl?.reset();
+            if(mode === 'edit' && initial?.id != null) {
+                console.log(initial);
+                await dispatch(updateProduct({id: initial.id, ...body})).unwrap();
+            } else {
+                await dispatch(addProduct(body)).unwrap();
+                formEl?.reset();
+            }
             setFieldsErrors({});
             onSuccess?.();
         } catch (error) {
@@ -84,7 +94,7 @@ const ProductForm = ({onSuccess}: ProductFormProps) => {
     }
 
     return (
-        <form className={'product-form'} id={'product-add-form'} onSubmit={handleSubmit} noValidate>
+        <form className={'product-form'} id={formId} onSubmit={handleSubmit} noValidate>
             <div className={'field'}>
                 <label htmlFor={'title'} className={'field__label'}>Заголовок</label>
                 <Input
@@ -93,6 +103,7 @@ const ProductForm = ({onSuccess}: ProductFormProps) => {
                     name={'title'}
                     id={'title'}
                     placeholder={'Футболка хлопковая'}
+                    defaultValue={initial?.title ?? ''}
                     required
                 />
                 {fieldsErrors.title ? (<span className={'field__error'}>{fieldsErrors.title}</span>) : ''}
@@ -107,6 +118,7 @@ const ProductForm = ({onSuccess}: ProductFormProps) => {
                     id={'price'}
                     type={"number"}
                     placeholder={'1999'}
+                    defaultValue={initial?.price ?? ''}
                     required
                 />
                 {fieldsErrors.price ? (<span className={'field__error'}>{fieldsErrors.price}</span>) : ''}
@@ -120,6 +132,7 @@ const ProductForm = ({onSuccess}: ProductFormProps) => {
                     onChange={() => clearErrors('description')}
                     name={'description'}
                     id={'description'}
+                    defaultValue={initial?.description ?? ''}
                     placeholder={'Описание товара'}
                 />
                 {fieldsErrors.description ? (
@@ -135,6 +148,7 @@ const ProductForm = ({onSuccess}: ProductFormProps) => {
                     name={'image'}
                     id={'image'}
                     placeholder={'URL'}
+                    defaultValue={initial?.image ?? ''}
                     required/>
                 {fieldsErrors.image ? (<span className={'field__error'}>{fieldsErrors.image}</span>) : ''}
             </div>
@@ -146,7 +160,7 @@ const ProductForm = ({onSuccess}: ProductFormProps) => {
                     onChange={() => clearErrors('category')}
                     name={'category'}
                     required
-                    defaultValue={""}
+                    defaultValue={initial?.category ?? ''}
                 >
                     {categories.map(c => (
                         <option key={c}>{c}</option>
