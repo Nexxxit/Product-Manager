@@ -21,6 +21,7 @@ type ExtraState = {
     sort: { by: SortBy; order: SortOrder } | null;
     categories: string[];
     creating: boolean;
+    editing: boolean;
 }
 
 const initial: ReturnType<typeof adapter.getInitialState> & ExtraState =
@@ -30,6 +31,7 @@ const initial: ReturnType<typeof adapter.getInitialState> & ExtraState =
         sort: null,
         categories: [],
         creating: false,
+        editing: false,
     })
 
 const productSlice = createSlice({
@@ -60,17 +62,8 @@ const productSlice = createSlice({
                 s.status = 'failed';
                 s.error = a.error.message || 'Ошибка'
             })
-            .addCase(fetchProductById.pending, (s) => {
-                s.status = 'loading';
-                s.error = null;
-            })
             .addCase(fetchProductById.fulfilled, (s, a) => {
-                s.status = 'succeeded';
                 adapter.setOne(s, a.payload)
-            })
-            .addCase(fetchProductById.rejected, (s, a) => {
-                s.status = 'failed';
-                s.error = a.error.message || 'Ошибка'
             })
             .addCase(addProduct.pending, (s) => {
                 s.creating = true
@@ -83,7 +76,15 @@ const productSlice = createSlice({
                 s.creating = false
                 s.error = a.error.message || 'Ошибка'
             })
+            .addCase(updateProduct.pending, (s) => {
+                s.editing = true
+            })
+            .addCase(updateProduct.rejected, (s, a) => {
+                s.editing = false
+                s.error = a.error.message || 'Ошибка'
+            })
             .addCase(updateProduct.fulfilled, (s, a) => {
+                s.editing = false
                 adapter.upsertOne(s, a.payload)
             })
             .addCase(deleteProduct.fulfilled, (s, a) => {
@@ -105,6 +106,7 @@ export const selectStatus = (s: RootState) => s.product.status
 export const selectCategories = (s: RootState) => s.product.categories
 export const selectSort = (s: RootState) => s.product.sort
 export const selectIsAdding = (s: RootState) => s.product.creating
+export const selectIsEditing = (s: RootState) => s.product.editing
 
 export const selectSortedProducts = createSelector([selectAllProducts, selectSort], (items, sort) => {
     if (!sort) return items
