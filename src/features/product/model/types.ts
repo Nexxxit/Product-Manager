@@ -10,4 +10,6 @@ export type Product = {
     rating: Rating;
 }
 
+export type UpdateProductInput = {id: number} & Partial<Omit<Product, 'id' | 'rating'>>
+
 export type NewProduct = Omit<Product, 'id' | 'rating'>
