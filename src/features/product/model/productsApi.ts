@@ -1,4 +1,4 @@
-import type {NewProduct, Product} from "./types.ts";
+import type {NewProduct, Product, UpdateProductInput} from "./types.ts";
 
 const BASE = 'https://fakestoreapi.com';
 
@@ -27,7 +27,7 @@ export const productsApi = {
         if (!response.ok) throw new Error('Не удалось добавить товар')
         return response.json()
     },
-    updateProduct: async (patch: Partial<Product> & Pick<Product, 'id'>): Promise<Product> => {
+    updateProduct: async (patch: UpdateProductInput): Promise<Product> => {
         const response = await fetch(`${BASE}/products/${patch.id}`, {
             method: 'PATCH',
             headers: {'Content-Type': 'application/json'},
