@@ -3,6 +3,7 @@ export {
     setSort,
     resetSort,
     selectIsAdding,
+    selectIsEditing,
     selectSort,
     selectSortedProducts,
     selectCategories,
