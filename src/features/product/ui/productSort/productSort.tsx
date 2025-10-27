@@ -1,19 +1,37 @@
 import Button from "../../../../shared/ui/Button/Button.tsx";
-import {useAppDispatch, useAppSelector} from "../../../../app/store/hooks.ts";
-import {resetSort, selectSort, setSort} from "../../model";
-import {SortSolid} from "../../../../shared/ui/icons/SortSolidIcon.tsx";
-import {useCallback, useRef, useState} from "react";
+import { useAppDispatch, useAppSelector } from "../../../../app/store/hooks.ts";
+import { resetSort, selectSort, setSort, selectTotalProducts } from "../../model";
+import { SortSolid } from "../../../../shared/ui/icons/SortSolidIcon.tsx";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import './productSort.css'
-import {useOnClickOutside} from "../../../../shared/hooks/useOnClickOutside.tsx";
-import {useEscape} from "../../../../shared/hooks/useEscape.tsx";
+import { useOnClickOutside } from "../../../../shared/hooks/useOnClickOutside.tsx";
+import { useEscape } from "../../../../shared/hooks/useEscape.tsx";
 
-const ProductSort = () => {
+const SortToggleButton = memo(({ onClick, disabled }: { onClick: () => void; disabled: boolean; }) => {
+    return (
+        <Button className={'button--primary'} onClick={onClick} disabled={disabled}>
+            <SortSolid />
+        </Button>
+    )
+})
+
+const ResetSortButton = memo(({ onClick }: { onClick: () => void; }) => {
+    return (
+        <Button className={'button--danger'} onClick={onClick}>
+            Сбросить
+        </Button>
+    )
+})
+
+const ProductSort = memo(() => {
     const [isOpen, setOpen] = useState(false);
     const dispatch = useAppDispatch()
     const sort = useAppSelector(selectSort)
+    const total = useAppSelector(selectTotalProducts)
+    const isDisabled = total === 0
 
     const set = (by: 'price' | 'rating', order: 'asc' | 'desc') => {
-        return dispatch(setSort({by, order}))
+        return dispatch(setSort({ by, order }))
     }
 
     const menuRef = useRef<HTMLDivElement>(null);
@@ -21,11 +39,19 @@ const ProductSort = () => {
     useOnClickOutside(menuRef, close);
     useEscape(close);
 
+    useEffect(() => {
+        if (isDisabled) setOpen(false);
+    }, [isDisabled]);
+
+    const toggle = useCallback(() => {
+        if (!isDisabled) setOpen(isOpen => !isOpen)
+    }, [isDisabled])
+
+    const onReset = useCallback(() => dispatch(resetSort()), [dispatch]);
+
     return (
         <div className={'products-sort'} ref={menuRef}>
-            <Button className={'button--primary'} onClick={() => setOpen(isOpen => !isOpen)}>
-                <SortSolid/>
-            </Button>
+            <SortToggleButton onClick={toggle} disabled={isDisabled} />
             {isOpen && (
                 <div className={'products-sort__panel'}>
                     <label className={'products-sort__sort-label'} htmlFor={'cheaper'}>
@@ -76,13 +102,11 @@ const ProductSort = () => {
                         С низким рейтингом
                     </label>
 
-                    <Button className={'button--danger'} onClick={() => dispatch(resetSort())}>
-                        Сбросить
-                    </Button>
+                    <ResetSortButton onClick={onReset} />
                 </div>
             )}
         </div>
     )
-}
+})
 
 export default ProductSort
