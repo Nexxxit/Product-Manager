@@ -43,9 +43,6 @@ const productSlice = createSlice({
         },
         resetSort(state) {
             state.sort = null
-        },
-        hydrate(state, action: PayloadAction<Product[]>) {
-            adapter.setAll(state, action.payload)
         }
     },
     extraReducers: (builder) => {
@@ -96,7 +93,7 @@ const productSlice = createSlice({
     }
 })
 
-export const {setSort, resetSort, hydrate} = productSlice.actions
+export const {setSort, resetSort} = productSlice.actions
 export default productSlice.reducer
 
 const selectors = adapter.getSelectors<RootState>((s) => s.product)
@@ -107,6 +104,7 @@ export const selectCategories = (s: RootState) => s.product.categories
 export const selectSort = (s: RootState) => s.product.sort
 export const selectIsAdding = (s: RootState) => s.product.creating
 export const selectIsEditing = (s: RootState) => s.product.editing
+export const selectTotalProducts = selectors.selectTotal
 
 export const selectSortedProducts = createSelector([selectAllProducts, selectSort], (items, sort) => {
     if (!sort) return items

@@ -9,7 +9,8 @@ export {
     selectCategories,
     selectStatus,
     selectAllProducts,
-    selectProductById
+    selectProductById,
+    selectTotalProducts,
 } from "./slice"
 
 export {
