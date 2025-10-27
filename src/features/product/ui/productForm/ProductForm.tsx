@@ -80,7 +80,6 @@ const ProductForm = ({onSuccess, formId, mode = 'create', initial}: ProductFormP
 
         try {
             if(mode === 'edit' && initial?.id != null) {
-                console.log(initial);
                 await dispatch(updateProduct({id: initial.id, ...body})).unwrap();
             } else {
                 await dispatch(addProduct(body)).unwrap();

@@ -36,7 +36,6 @@ const ProductDetail = ({id, editMode, onEditSuccess}: ProductDetailProps) => {
         <>
             {editMode ? (
                 <ProductForm
-                    key={`edit-${id}`}
                     formId={'product-edit-form'}
                     mode={'edit'}
                     initial={product}
