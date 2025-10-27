@@ -31,6 +31,7 @@
     --ring: 0 0 0 3px rgba(99,102,241,.35);
 
     --card-shadow: 0 8px 24px rgba(2, 6, 23, .08);
+    --card-bg-url: "";
 
     --modal-bg: #fff;
     --modal-border: #e5e7eb;
