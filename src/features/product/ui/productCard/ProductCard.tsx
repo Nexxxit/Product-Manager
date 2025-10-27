@@ -2,25 +2,29 @@ import {StarFilled} from "../../../../shared/ui/icons/StarFilledIcon.tsx"
 import {useAppSelector} from "../../../../app/store/hooks.ts";
 import {selectProductById} from "../../model";
 import './productCard.css'
+import {memo, useCallback} from "react";
 
 type ProductCardProps = {
-    onClick: () => void;
+    onItemClick: (id: number) => void;
     id: number;
 }
 
-const ProductCard = ({id, onClick}: ProductCardProps) => {
+const ProductCard = memo(({id, onItemClick}: ProductCardProps) => {
+    const handleClick = useCallback(() => onItemClick(id), [onItemClick, id]);
     const product = useAppSelector(s => selectProductById(s, id))
     if (!product) return null
 
     return (
-        <article className={'card'} onClick={onClick}>
+        <article className={'card'} onClick={handleClick}>
             <div className={'card__image-wrap'}>
-                <img className={'card__image-bg'} src={product.image} alt={""} aria-hidden={"true"} loading={"lazy"} />
                 <img
                     className={'card__image'}
                     src={product.image}
                     alt={product.title}
+                    width={320}
+                    height={320}
                     loading={"lazy"}
+                    decoding={"async"}
                 />
             </div>
 
@@ -35,7 +39,7 @@ const ProductCard = ({id, onClick}: ProductCardProps) => {
             </div>
         </article>
     )
-}
+})
 
 export default ProductCard
 
