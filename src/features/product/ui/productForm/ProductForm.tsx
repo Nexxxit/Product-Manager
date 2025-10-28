@@ -16,6 +16,7 @@ const ProductForm = ({onSuccess, formId, mode = 'create', initial}: ProductFormP
     const [fieldsErrors, setFieldsErrors] = useState<FieldsErrors>({})
     const categories = useAppSelector(selectCategories)
     const dispatch = useAppDispatch()
+    const isLoadingCats = categories.length === 0
 
     useEffect(() => {
         if (categories.length === 0) dispatch(fetchCategories())
@@ -79,7 +80,7 @@ const ProductForm = ({onSuccess, formId, mode = 'create', initial}: ProductFormP
         const formEl = e.currentTarget;
 
         try {
-            if(mode === 'edit' && initial?.id != null) {
+            if (mode === 'edit' && initial?.id != null) {
                 await dispatch(updateProduct({id: initial.id, ...body})).unwrap();
             } else {
                 await dispatch(addProduct(body)).unwrap();
@@ -160,10 +161,22 @@ const ProductForm = ({onSuccess, formId, mode = 'create', initial}: ProductFormP
                     name={'category'}
                     required
                     defaultValue={initial?.category ?? ''}
+                    disabled={mode === 'create' ? isLoadingCats : false}
                 >
-                    {categories.map(c => (
-                        <option key={c}>{c}</option>
-                    ))}
+                    {isLoadingCats ? (
+                        initial?.category ? (
+                            <option value={initial.category}>{initial.category}</option>
+                        ) : (
+                            <option value={""} disabled>Загружаю категории...</option>
+                        )
+                    ) : (
+                        <>
+                            {initial?.category && <option value={""} disabled>Выберите категорию</option>}
+                            {categories.map(c => (
+                                <option key={c} value={c}>{c}</option>
+                            ))}
+                        </>
+                    )}
                 </select>
                 {fieldsErrors.category ? (<span className={'field__error'}>{fieldsErrors.category}</span>) : ''}
             </div>
