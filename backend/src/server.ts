@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 
 const app = express();
 app.use(cors());
@@ -115,6 +116,9 @@ app.delete('/api/products/:id', (req, res) => {
     products.splice(idx, 1)
     res.json({ id });
 });
+
+const CLIENT_DIST = path.resolve(__dirname, '../../frontend/dist');
+app.use(express.static(CLIENT_DIST));
 
 const PORT = Number(process.env.PORT) || 3001;
 app.listen(PORT, () => console.log(`API on http://localhost:${PORT}`));

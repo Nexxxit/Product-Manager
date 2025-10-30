@@ -1,6 +1,6 @@
 import type {NewProduct, Product, UpdateProductInput} from "./types.ts";
 
-const BASE = 'http://localhost:3001/api';
+const BASE = import.meta.env.PROD ? '/api' : 'http://localhost:3001/api';
 
 const USE_API_IN_DEV = import.meta.env.VITE_USE_API_IN_DEV === 'true';
 
